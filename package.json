@@ -1,0 +1,35 @@
+{
+  "name": "spa-serv",
+  "version": "0.1.0",
+  "description": "Simple server for hosting Spas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericmackrodt/spa-serv"
+  },
+  "keywords": [
+    "spa",
+    "node",
+    "angular",
+    "server"
+  ],
+  "author": "Eric Mackrodt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericmackrodt/spa-serv/issues"
+  },
+  "homepage": "https://github.com/ericmackrodt/spa-serv",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "express": "^4.13.4",
+    "morgan": "^1.7.0",
+    "openurl": "^1.1.1"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "spa-serv": "index.js"
+  }
+}

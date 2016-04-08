@@ -1,0 +1,9 @@
+{
+    "port": 3000,
+    "rootFolder": "./",
+    "CORS": {
+        "allowOrigin": "*",
+        "allowMethods": "GET,PUT,POST,DELETE",
+        "allowHeaders": "Origin, Content-Type, Authorization"
+    }
+}
