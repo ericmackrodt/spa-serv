@@ -1,10 +1,11 @@
 {
   "name": "spa-serv",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple server for hosting Spas",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-client": "browserify client/client.js -o public/spa-serv-client.js"
   },
   "repository": {
     "type": "git",
@@ -23,13 +24,22 @@
   },
   "homepage": "https://github.com/ericmackrodt/spa-serv",
   "dependencies": {
+    "cheerio": "^0.20.0",
     "colors": "^1.1.2",
     "express": "^4.13.4",
+    "express-interceptor": "^1.2.0",
+    "moment": "^2.12.0",
     "morgan": "^1.7.0",
-    "openurl": "^1.1.1"
+    "node-watch": "^0.3.5",
+    "openurl": "^1.1.1",
+    "socket.io": "^1.4.5",
+    "socket.io-client": "^1.4.5"
   },
   "preferGlobal": true,
   "bin": {
     "spa-serv": "index.js"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0"
   }
 }

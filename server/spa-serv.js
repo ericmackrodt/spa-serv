@@ -2,10 +2,19 @@ var logger = require("./logger");
 var express = require("express");
 var morgan = require("morgan");
 var openurl = require("openurl");
+var path = require("path");
+var http = require("http");
+var socket = require("socket.io");
+var watch = require("node-watch");
+var cheerio = require("cheerio");
+var interceptor = require("express-interceptor");
 
 var server = module.exports = function spaServ(config) {
     var self = this;
     var app = express();
+    var server = http.createServer(app);
+    var io = socket(server);
+    var currentEnd;
     
     function cors() {
         if (!config.CORS) return;
@@ -29,21 +38,39 @@ var server = module.exports = function spaServ(config) {
         logger.keyValue('CORS Allowed Headers', config.CORS.allowHeaders);
     }
     
-    var logStream = {
-        write: function (message, encoding) {
-            console.log(message);
-        }
-    };
+    function setupWatch() {
+        watch(config.rootFolder, function(filename) {
+           logger.fileChanged(filename);
+           io.emit('spa-serv:refresh', { filename: filename });
+        });
+    }
+    
+    function injectClient(req, res) {
+        return {
+            isInterceptable: function() {
+                return (req._parsedUrl.pathname === "/" || req._parsedUrl.pathname === "index.html") && /text\/html/.test(res.get('Content-Type')); 
+            },
+            intercept: function (body, send) {
+                var $document = cheerio.load(body);
+                $document('body').append('<script type="text/javascript">window.spaServPort = ' + config.port + '</script>');
+                $document('body').append('<script type="text/javascript" src="/spa-serv/spa-serv-client.js"></script>');
+                send($document.html());
+            }
+        };
+    }
     
     function setup() {
-        cors();        
-        app.use(morgan(logger.response(':date[web]', ':status', ':method', ':url'), { "stream": logStream }));
+        cors();
+        setupWatch();
+        app.use(interceptor(injectClient));
+        app.use(morgan('combined', logger.morgan()));
+        app.use('/spa-serv', express.static(path.join(__dirname, './../public')));
         app.use('/', express.static(config.rootFolder));
     }
     
     self.start = function (launchBrowser) {
         setup();
-        app.listen(config.port, function() {
+        server.listen(config.port, function() {
             logger.keyValue('Server started on port', config.port);
         });
         
