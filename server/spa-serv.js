@@ -8,6 +8,7 @@ var socket = require("socket.io");
 var watch = require("node-watch");
 var cheerio = require("cheerio");
 var interceptor = require("express-interceptor");
+var compress = require("compression");
 
 var server = module.exports = function spaServ(config) {
     var self = this;
@@ -61,10 +62,13 @@ var server = module.exports = function spaServ(config) {
     
     function setup() {
         cors();
+        if (config.enableCompression === true) {
+            app.use(compress());
+        }
         setupWatch();
         app.use(interceptor(injectClient));
         app.use(morgan('combined', logger.morgan()));
-        app.use('/spa-serv', express.static(path.join(__dirname, './../public')));
+        app.use('/spa-serv', express.static(path.join(__dirname, './../public')));        
         app.use('/', express.static(config.rootFolder));
     }
     
