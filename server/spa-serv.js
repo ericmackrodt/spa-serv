@@ -74,12 +74,13 @@ var server = module.exports = function spaServ(config) {
     
     self.start = function (launchBrowser) {
         setup();
-        server.listen(config.port, function() {
-            logger.keyValue('Server started on port', config.port);
+        var address = config.address || "localhost";
+        server.listen(config.port, address, 511, function() {
+            logger.keyValue('Server started on', address + ":" + config.port);
         });
         
         if (launchBrowser) {
-            openurl.open("http://localhost:" + config.port);
+            openurl.open("http://" + address + ":" + config.port);
         }
     };
 };

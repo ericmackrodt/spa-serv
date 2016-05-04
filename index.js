@@ -6,6 +6,9 @@ var logger = require('./server/logger');
 var fs = require('fs');
 var path = require('path');
 
+var pjson = require('./package.json');
+logger.info('Starting SPA-SERV version ' + pjson.version);
+
 var config = JSON.parse(fs.readFileSync(path.join(__dirname, '/default-config.json'), 'utf8'));
 
 try {
