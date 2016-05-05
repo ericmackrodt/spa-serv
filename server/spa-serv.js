@@ -53,7 +53,8 @@ var server = module.exports = function spaServ(config) {
             },
             intercept: function (body, send) {
                 var $document = cheerio.load(body);
-                $document('body').append('<script type="text/javascript">window.spaServPort = ' + config.port + '</script>');
+                var address = config.address || "localhost";
+                $document('body').append('<script type="text/javascript">window.spaServAddress = "' + address + ":" + config.port + '"</script>');
                 $document('body').append('<script type="text/javascript" src="/spa-serv/spa-serv-client.js"></script>');
                 send($document.html());
             }

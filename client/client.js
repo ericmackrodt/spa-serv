@@ -1,6 +1,6 @@
 var io = require("socket.io-client");
 var popup = require("./popup");
-var socket = io.connect("http://localhost:" + window.spaServPort);
+var socket = io.connect("http://" + window.spaServAddress);
 socket.on('connect', function (socket) {
     console.log('Spa-serv client connected');
     popup.show('Connected to SPA-SERV');
