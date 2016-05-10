@@ -39,11 +39,22 @@ var server = module.exports = function spaServ(config) {
         logger.keyValue('CORS Allowed Headers', config.CORS.allowHeaders);
     }
     
+    function ignoreFilter(pattern, fn) {
+        return function(filename) {
+            if (!pattern) fn(filename);
+            
+            var reg = new RegExp(pattern);
+            if (!reg.test(filename)) {
+                fn(filename);
+            }
+        };
+    }
+    
     function setupWatch() {
-        watch(config.rootFolder, function(filename) {
+        watch(config.rootFolder, ignoreFilter(config.ignoreFiles, function(filename) {
            logger.fileChanged(filename);
            io.emit('spa-serv:refresh', { filename: filename });
-        });
+        }));
     }
     
     function injectClient(req, res) {
